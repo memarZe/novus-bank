@@ -7,6 +7,7 @@ import com.novus.novusbank.auth_users.dto.UserDTO;
 import com.novus.novusbank.auth_users.entity.User;
 import com.novus.novusbank.auth_users.repo.UserRepo;
 import com.novus.novusbank.auth_users.services.UserService;
+import com.novus.novusbank.aws.S3Service;
 import com.novus.novusbank.exceptions.BadRequestException;
 import com.novus.novusbank.exceptions.NotFoundException;
 import com.novus.novusbank.notification.dto.NotificationDTO;
@@ -39,11 +40,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    private final S3Service s3Service;
+
     private final UserRepo userRepo;
     private final NotificationService notificationService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
-    private final String uploadeDir = "upload/profile-pictures/";
+    // private final String uploadeDir = "upload/profile-pictures/";
+    private final String uploadeDir = "/Users/memardesta/novus-bank/novus-bank-frontend/public/profile-picture/";
 
     @Override
     public User getCurrentLoggedInUser() {
@@ -145,7 +149,9 @@ public class UserServiceImpl implements UserService {
             Path filePath = uploadPath.resolve(newFilename);
             Files.copy(file.getInputStream(), filePath);
 
+            // String fileUrl = uploadeDir + newFilename;
             String fileUrl = "profile-picture/" + newFilename;
+
             user.setProfilePictureUrl(fileUrl);
             user.setUpdatedAt(LocalDateTime.now());
 
@@ -163,8 +169,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response<?> uploadProfilePictureToS3(MultipartFile file) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'uploadProfilePictureToS3'");
+
+        User user = getCurrentLoggedInUser();
+
+        try {
+            if (user.getProfilePictureUrl() != null && !user.getProfilePictureUrl().isEmpty()) {
+                s3Service.deleteFile(user.getProfilePictureUrl());
+            }
+
+            String s3Url = s3Service.uploadFile(file, "profile-pictures");
+            user.setProfilePictureUrl(s3Url);
+            user.setUpdatedAt(LocalDateTime.now());
+            userRepo.save(user);
+
+            return Response.builder()
+                    .statusCode(HttpStatus.OK.value())
+                    .message("Profile picture uploaded successfully to S3")
+                    .data(s3Url)
+                    .build();
+
+        } catch (IOException e) {
+            throw new RuntimeErrorException(null, "Failed to upload profile picture to S3");
+        }
     }
 
 }
