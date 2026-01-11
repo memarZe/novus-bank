@@ -1,0 +1,26 @@
+# Docker Compose configuration
+services:
+  # Application service
+  app:
+    #Use the following for building from Dockerfile
+    build:
+      context: .
+    # Use the following for using pre-built image from Docker Hub
+    # image: your-dockerhub-username/novus-bank:latest
+    ports:
+      - "8090:8090"
+    # Uncomment the following line to enable health checks
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    restart: unless-stopped
+    # Uncomment the following line to enable logging
+    # logging:
+    #   driver: "json-file"
+    #   options:
+    #     max-size: "10m"
+    #     max-file: "3"
+    env_file:
+      - .env

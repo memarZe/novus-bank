@@ -8,7 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf /var/lib/apt/lists/*
 
 # Copy the entire project to the container
-COPY pom.xml
+COPY pom.xml .
 
 # Pre-download all dependencies
 RUN mvn dependency:go-offline -B
