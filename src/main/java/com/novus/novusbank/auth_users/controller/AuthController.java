@@ -16,10 +16,26 @@ import com.novus.novusbank.response.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * AuthController handles authentication and user account related endpoints.
+ * <p>
+ * Endpoints:
+ * <ul>
+ * <li><b>POST /api/auth/register</b>: Register a new user account</li>
+ * <li><b>POST /api/auth/login</b>: Authenticate a user and return a JWT
+ * token</li>
+ * <li><b>POST /api/auth/forgot-password</b>: Send a password reset link to the
+ * user's email</li>
+ * <li><b>POST /api/auth/reset-password</b>: Reset the user's password using a
+ * reset code</li>
+ * </ul>
+ * <p>
+ * This controller delegates business logic to the AuthService and returns
+ * standardized responses.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-
 public class AuthController {
     private final AuthService authService;
 
