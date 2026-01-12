@@ -20,6 +20,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * UserController manages user-related endpoints such as profile retrieval,
+ * password updates, and profile picture uploads.
+ * <p>
+ * Endpoints:
+ * <ul>
+ * <li><b>GET /api/users</b>: Retrieve paginated list of all users (ADMIN
+ * only)</li>
+ * <li><b>GET /api/users/me</b>: Get the profile of the authenticated user</li>
+ * <li><b>PUT /api/users/update-password</b>: Update the password for the
+ * authenticated user</li>
+ * <li><b>PUT /api/users/profile-picture</b>: Upload a new profile picture for
+ * the authenticated user</li>
+ * </ul>
+ * <p>
+ * This controller delegates business logic to the UserService and returns
+ * standardized responses.
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
