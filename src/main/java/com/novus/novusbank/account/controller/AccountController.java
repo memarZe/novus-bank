@@ -7,6 +7,20 @@ import org.springframework.web.bind.annotation.*;
 import com.novus.novusbank.account.services.AccountService;
 import com.novus.novusbank.response.Response;
 
+/**
+ * AccountController handles HTTP requests related to user bank accounts.
+ * <p>
+ * Endpoints:
+ * <ul>
+ * <li><b>GET /api/accounts/me</b>: Retrieve all accounts for the authenticated
+ * user</li>
+ * <li><b>DELETE /api/accounts/close/{accountNumber}</b>: Close a specific
+ * account by account number</li>
+ * </ul>
+ * <p>
+ * This controller delegates business logic to the AccountService and returns
+ * standardized responses.
+ */
 @RestController
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
