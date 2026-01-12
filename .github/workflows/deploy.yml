@@ -1,1 +1,24 @@
+# Deploy to EC2
+# This workflow deploys the application to the production environment on every push to the main branch.
 
+name: Deploy to EC2 # Workflow name
+on: # Workflow trigger
+  push: # Trigger on push events
+    branches: # Specify branches
+      - "main" # Only on main branch
+jobs: # Define jobs
+  deploy: # Deploy job
+    runs-on: ubuntu-latest # Use latest Ubuntu runner
+    steps: # Steps in the deploy job
+      - name: Checkout code # Step: Checkout repository code
+        uses: actions/checkout@v3 # Use checkout action
+      - name: Deploy to EC2 # Step: Deploy to EC2 instance
+        uses: appleboy/ssh-action@main # Use SSH action for remote commands
+        with: # Parameters for SSH action
+          host: ${{ secrets.SSH_HOST }} # EC2 host from secrets
+          username: ec2-user # SSH username
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # SSH private key from secrets
+          script: | # Script to run on EC2
+            cd /home/ec2-user/projects/novus-bank
+            git pull 
+            docker-compose up --build -d

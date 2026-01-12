@@ -1,20 +1,22 @@
-name: Validate Build Only
+# Validate Build Only
+# This workflow validates the build on every push to any branch.
 
-on:
-  push:
-    branches:
-      - "**"
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: "21"
-          distribution: "temurin"
+name: Validate Build Only # Workflow name
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
+on: # Workflow trigger
+  push: # Trigger on push events
+    branches: # Specify branches
+      - "**" # All branches
+jobs: # Define jobs
+  build: # Build job
+    runs-on: ubuntu-latest # Use latest Ubuntu runner
+    steps: # Steps in the build job
+      - name: Checkout code # Step: Checkout repository code
+        uses: actions/checkout@v3 # Use checkout action
+      - name: Set up JDK 21 # Step: Set up Java 21
+        uses: actions/setup-java@v3 # Use setup-java action
+        with: # Parameters for setup-java
+          java-version: "21" # Set Java version to 21
+          distribution: "temurin" # Use Temurin distribution
+      - name: Build with Maven # Step: Build project with Maven
+        run: mvn clean package -DskipTests # Run Maven build, skip tests
